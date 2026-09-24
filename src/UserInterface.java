@@ -9,13 +9,17 @@ public class UserInterface {
 
     public void startGame() {
         boolean escapeRoomFinished = false;
-        String NotGoThatWay = "You cannot go that way";
+        String notGoThatWay = "You cannot go that way";
 
         IO.println("Welcome to the escape room! \nYou have to find room 5 to survive and get out! If you don't make it in time, the game will end and you will die!!! ");
         IO.println("Rules: You can move in directions: North, South, East and West \njust type 'go north' to move north or 'go south' for south");
         IO.println("If you need help you can also type 'help', and if you want your current position repeated type 'look' \nif you wish to exit the game just type 'exit'\n");
 
-        String username = IO.readln("What is your name player? ");
+        String gameName =(IO.readln("What is your name player? "));
+        adventure.setPlayerName(gameName);
+        IO.println("hello "+ adventure.getPlayerName());
+
+        IO.println("Good luck finding your way out!");
         IO.println(adventure.getCurrentRoom());
 
         while (!escapeRoomFinished) {
@@ -29,7 +33,7 @@ public class UserInterface {
                     if (adventure.goNorth()) {
                         IO.println(adventure.getCurrentRoom());
                     } else {
-                        IO.println(NotGoThatWay);
+                        IO.println(notGoThatWay);
                     }
                 }
 
@@ -37,21 +41,21 @@ public class UserInterface {
                     if (adventure.goSouth()) {
                         IO.println(adventure.getCurrentRoom());
                     } else {
-                        IO.println(NotGoThatWay);
+                        IO.println(notGoThatWay);
                     }
                 }
                 case "go east", "Go east", "east" -> {
                     if (adventure.goEast()) {
                         IO.println(adventure.getCurrentRoom());
                     } else {
-                        IO.println(NotGoThatWay);
+                        IO.println(notGoThatWay);
                     }
                 }
                 case "go west", "Go west", "west" -> {
                     if (adventure.goWest()) {
                         IO.println(adventure.getCurrentRoom());
                     } else {
-                        IO.println(NotGoThatWay);
+                        IO.println(notGoThatWay);
                     }
                 }
                 case "help" -> {
@@ -61,7 +65,7 @@ public class UserInterface {
                     IO.println(adventure.getCurrentRoom());
                 }
                 case "exit" -> {
-                    IO.println("Hasta la vista " + username);
+                    IO.println("Hasta la vista " + adventure.getPlayerName());
                     escapeRoomFinished = true;
                 }
                 default -> {
@@ -70,17 +74,18 @@ public class UserInterface {
             }
             //QUESTION TO SOLVE - IF USER GUESS WRONG, IT'S BACK TO ROOM 1 AND START OVER
             if (adventure.winningRoom5()) {
-                adventure.questionToWin();
-                String answertoWinOrFail = IO.readln(adventure.questionToWin());
-                if (adventure.checkAnswer(answertoWinOrFail)) {
+                String answerToWinOrFail = IO.readln(adventure.questionToWin());
+                if (adventure.checkAnswer(answerToWinOrFail)) {
                     IO.println("Congratulations! You answered correctly and made it to room 5 - the White room with light");
-                    String answer = IO.readln(username + " do you want to play again? (yes/no)");
+                    String answer = IO.readln(adventure.getPlayerName() + " do you want to play again? (yes/no)");
                     if (answer.equals("yes")) {
+                        String keepName = adventure.getPlayerName();
                         adventure = new Adventure();
+                        adventure.setPlayerName(keepName);
                         IO.println(adventure.getCurrentRoom());
                     } else {
                         escapeRoomFinished = true;
-                        IO.println("Goodbye " + username);
+                        IO.println("Goodbye " + adventure.getPlayerName());
                     }
                 } else {
                     IO.println("Wrong answer, back to start!");
