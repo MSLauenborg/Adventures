@@ -1,9 +1,17 @@
+import java.util.ArrayList;
+
 public class Player {
     private Room currentRoom;
     private String name;
+    private ArrayList<Item> inventory;
 
     public Player(Room startRoom) {
+        this.inventory = new ArrayList<>();
         this.currentRoom = startRoom;
+    }
+
+    public ArrayList<Item> getInventory() {
+        return inventory;
     }
 
     public void setName (String name) {
@@ -21,6 +29,41 @@ public class Player {
     public Room getCurrentRoom() {
         return currentRoom;
     }
+
+    public ArrayList<Item> getCurrentRoomItems() {
+        return getCurrentRoom().getItems();
+    }
+
+    public Item takeItem(String shortName) {
+        Item item = currentRoom.findItem(shortName);
+        if(item == null) {
+            return null;
+        }
+        currentRoom.removeItem(item);
+        inventory.add(item);
+        return item;
+    }
+
+    public Item findItem(String shortName) {
+        for (Item item : inventory) {
+            if (item.getShortName().equals(shortName)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+
+    public Item dropItem(String shortName) {
+        Item item = findItem(shortName);
+        if(findItem(shortName) == null) {
+            return null;
+        }
+        currentRoom.addItem(item);
+        inventory.remove(item);
+        return item;
+    }
+
 
     //NAVIGATION
     public boolean goNorth() {

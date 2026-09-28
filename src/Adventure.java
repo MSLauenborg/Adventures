@@ -1,13 +1,17 @@
+import java.util.ArrayList;
+
 public class Adventure {
 
     private Player player;
     private String correctAnswer;
     private EscaperoomMap map;
 
+
     public Adventure() {
         this.map = new EscaperoomMap();
         this.player = new Player(map.getStartRoom());
         this.correctAnswer = "white";
+
     }
 
     public boolean winningRoom5() {
@@ -49,7 +53,7 @@ public class Adventure {
     }
 
     public Room getCurrentRoom() {
-       return this.player.getCurrentRoom();
+        return this.player.getCurrentRoom();
     }
 
     public void setPlayerName(String name) {
@@ -59,6 +63,25 @@ public class Adventure {
     public String getPlayerName() {
         return this.player.getName();
     }
+
+    public ArrayList<Item> getCurrentRoomItems() {
+        return player.getCurrentRoomItems();
+    }
+
+    public ArrayList<Item> getPlayerInventory() {
+        return player.getInventory();
+    }
+
+    public Item takeItem(String shortName) {
+        return player.takeItem(shortName);
+
+    }
+
+    public Item dropItem(String shortName) {
+        return player.dropItem(shortName);
+
+    }
+
 
 }
 

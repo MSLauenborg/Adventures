@@ -5,6 +5,7 @@ public class EscaperoomMap {
 
     public EscaperoomMap() {
 
+        //ROOMS FOR THE MAP
         Room room1 = new Room("Room 1", "You are in the darkest room!");
         Room room2 = new Room("Room 2", "You are in the red room, be careful!");
         Room room3 = new Room("Room 3", "You are in the yellow room! lies await so guess careful");
@@ -15,6 +16,15 @@ public class EscaperoomMap {
         Room room8 = new Room("Room 8", "You are in the brown room! It's muddy but you sense something is close");
         Room room9 = new Room("Room 9", "You are in the orange room! when life makes you oranges do what? go back!");
 
+        //ITEMS FOR ROOMS
+        room1.addItem(new Item("torch", "a burning torch"));
+        room7.addItem(new Item("brush", "a powerfull brush"));
+        room7.addItem(new Item("paint", "magic paint"));
+        room8.addItem(new Item("book", "a book about Snow White and the 7 dwarves"));
+        room2.addItem(new Item("bag" , "a bag for the weak people"));
+        room2.addItem(new Item("knife", "a sharp knife"));
+        room2.addItem(new Item("body", "a dead body on the ground"));
+                
         this.winningRoom = room5;
         this.startRoom = room1;
 

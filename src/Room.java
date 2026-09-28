@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Room {
 
     private String name;
@@ -6,13 +8,41 @@ public class Room {
     private Room south;
     private Room east;
     private Room west;
-
+    private ArrayList<Item> items = new ArrayList<>();
 
     public Room(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
+    public ArrayList<Item> getItems() {
+        return items;
+    }
+
+    public void addItem(Item item) {
+        items.add(item);
+    }
+
+    public void removeItem(Item item) {
+        items.remove(item);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Item findItem(String shortName) {
+        for (Item item : items) {
+            if (item.getShortName().equals(shortName)) {
+                return item;
+            }
+        }
+        return null;
+    }
 
     //ALL DIRECTIONS WITH GET AND SET
 
