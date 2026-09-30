@@ -21,10 +21,24 @@ public class EscaperoomMap {
         room7.addItem(new Item("brush", "a powerfull brush"));
         room7.addItem(new Item("paint", "magic paint"));
         room8.addItem(new Item("book", "a book about Snow White and the 7 dwarves"));
-        room2.addItem(new Item("bag" , "a bag for the weak people"));
+        room2.addItem(new Item("bag" , "a bag for the empty people"));
         room2.addItem(new Item("knife", "a sharp knife"));
         room2.addItem(new Item("body", "a dead body on the ground"));
-                
+
+        //FOOD FOR ROOMS
+        Food cake = new Food("cake","a sweet green cake", -30);
+        Food banana = new Food("banana", "a healthy banana", 20);
+        Food sketchyMeat = new Food("meat", "a juicy piece of meat", -50);
+        Food vegetables = new Food("vegetables", "magic coloured vegetables", 30);
+        Food joint = new Food("joint", "a big fat joint containing sketchy ingredients", -25);
+
+        //ADDING FOOD FOR ROOMS
+        room1.addItem(banana);
+        room4.addItem(cake);
+        room8.addItem(sketchyMeat);
+        room7.addItem(vegetables);
+        room2.addItem(joint);
+
         this.winningRoom = room5;
         this.startRoom = room1;
 

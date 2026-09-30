@@ -130,6 +130,28 @@ public class UserInterface {
                     }
                 }
 
+                case "health" -> {
+                    int playerHealth = adventure.getPlayerHealth();
+                    if(playerHealth >= 80) {
+                        IO.println("health: " + playerHealth + " - you are in perfect health");
+                    } else if ( playerHealth >= 50) {
+                        IO.println("health: " + playerHealth + " - you are ok, but need more energy!" );
+                    } else {
+                        IO.println("health: " + playerHealth + " - You really need some more food NOW!");
+                    }
+                }
+
+                case "eat" -> {
+                    Item item = adventure.findItemAnywhere(itemName);
+                    EatResult result = adventure.eatItem(itemName);
+                    switch (result) {
+                        case NOT_FOUND -> IO.println("There is nothing like " + itemName + " to eat around here");
+                        case NOT_FOOD  -> IO.println("You cannot eat " + item.getLongName());
+                        case EATEN     -> IO.println("You ate " + item.getLongName());
+                    }
+                }
+
+
                 default -> {
                     IO.println("Unknown move, try again");
                 }

@@ -4,17 +4,23 @@ public class Player {
     private Room currentRoom;
     private String name;
     private ArrayList<Item> inventory;
+    private int health;
 
     public Player(Room startRoom) {
         this.inventory = new ArrayList<>();
         this.currentRoom = startRoom;
+        this.health = 60;
+    }
+
+    public int getHealth() {
+        return health;
     }
 
     public ArrayList<Item> getInventory() {
         return inventory;
     }
 
-    public void setName (String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -34,9 +40,35 @@ public class Player {
         return getCurrentRoom().getItems();
     }
 
+    public Item findItemAnywhere(String shortName) {
+        Item item = findItem(shortName);
+        if (item == null) {
+            item = currentRoom.findItem(shortName);
+        }
+        return item;
+    }
+
+    public EatResult eatItem(String shortName) {
+        Item item = findItemAnywhere(shortName);
+        if (item == null) {
+            return EatResult.NOT_FOUND;
+        }
+        if (!(item instanceof Food)) {
+            return EatResult.NOT_FOOD;
+        }
+        Food food = (Food) item;
+        health += food.getHealthPoints();
+        inventory.remove(item);
+        currentRoom.removeItem(item);
+        return EatResult.EATEN;
+    }
+
+
+//METHODS FOR HANDLING ITEMS:
+
     public Item takeItem(String shortName) {
         Item item = currentRoom.findItem(shortName);
-        if(item == null) {
+        if (item == null) {
             return null;
         }
         currentRoom.removeItem(item);
@@ -56,7 +88,7 @@ public class Player {
 
     public Item dropItem(String shortName) {
         Item item = findItem(shortName);
-        if(findItem(shortName) == null) {
+        if (findItem(shortName) == null) {
             return null;
         }
         currentRoom.addItem(item);
@@ -65,7 +97,8 @@ public class Player {
     }
 
 
-    //NAVIGATION
+//NAVIGATION METHODS:
+
     public boolean goNorth() {
         Room north = currentRoom.getNorth();
         if (north == null) {

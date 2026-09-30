@@ -82,6 +82,15 @@ public class Adventure {
 
     }
 
+    public int getPlayerHealth() {
+        return this.player.getHealth();
+    }
 
+    public EatResult eatItem(String shortName) {
+        return player.eatItem(shortName);
+    }
+    public Item findItemAnywhere(String shortName) {
+        return player.findItemAnywhere(shortName);
+    }
 }
 
