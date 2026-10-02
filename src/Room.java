@@ -27,13 +27,6 @@ public class Room {
         items.remove(item);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 
     public Item findItem(String shortName) {
         for (Item item : items) {

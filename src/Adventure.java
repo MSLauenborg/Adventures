@@ -89,8 +89,25 @@ public class Adventure {
     public EatResult eatItem(String shortName) {
         return player.eatItem(shortName);
     }
+
     public Item findItemAnywhere(String shortName) {
         return player.findItemAnywhere(shortName);
+    }
+
+    public EquipResult equipItem(String shortName) {
+        return player.equipItem(shortName);
+    }
+
+    public AttackResult attack() {
+        return player.attack();
+    }
+
+    public int getRemainingShots() {
+        return player.getRemainingShots();
+    }
+
+    public Weapon getEquippedWeapon() {
+        return player.getEquippedWeapon();
     }
 }
 

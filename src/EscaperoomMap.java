@@ -39,6 +39,19 @@ public class EscaperoomMap {
         room7.addItem(vegetables);
         room2.addItem(joint);
 
+        //SUBCLASS WEAPON ITEMS FOR ROOMS:
+        RangedWeapon rifle = new RangedWeapon("rifle", "USSR ak47 rifle ", 10);
+        RangedWeapon desertEagle = new RangedWeapon("pistol", "Israelic defence pistol", 7);
+        MeleeWeapon knife = new MeleeWeapon("knife", "Sharp and cool sixblade knife");
+        MeleeWeapon sword = new MeleeWeapon("sword", "long and majestic LOTR sword");
+
+        //ADDING WEAPONS TO ROOMS:
+        room1.addItem(rifle);
+        room4.addItem(knife);
+        room2.addItem(sword);
+        room7.addItem(desertEagle);
+
+        //WINNING AND START ROOM:
         this.winningRoom = room5;
         this.startRoom = room1;
 

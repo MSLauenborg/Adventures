@@ -5,11 +5,14 @@ public class Player {
     private String name;
     private ArrayList<Item> inventory;
     private int health;
+    private Weapon weapon;
+    private int remainingShots;
 
     public Player(Room startRoom) {
         this.inventory = new ArrayList<>();
         this.currentRoom = startRoom;
         this.health = 60;
+        this.weapon = null;
     }
 
     public int getHealth() {
@@ -48,6 +51,18 @@ public class Player {
         return item;
     }
 
+    public EquipResult equipItem(String shortName) {
+        Item item = findItem(shortName);
+        if (item == null) {
+            return EquipResult.NOT_FOUND;
+        }
+        if (!(item instanceof Weapon)) {
+            return EquipResult.NOT_WEAPON;
+        }
+        this.weapon = (Weapon) item;
+        return EquipResult.EQUIPPED;
+    }
+
     public EatResult eatItem(String shortName) {
         Item item = findItemAnywhere(shortName);
         if (item == null) {
@@ -63,8 +78,28 @@ public class Player {
         return EatResult.EATEN;
     }
 
+    public AttackResult attack() {
 
-//METHODS FOR HANDLING ITEMS:
+        if (weapon == null) {
+            return AttackResult.NO_WEAPON;
+        }
+        if (!weapon.canUse()) {
+            return AttackResult.NO_AMMO;
+        }
+        remainingShots = weapon.use();
+        return AttackResult.ATTACKED;
+    }
+
+    public Weapon getEquippedWeapon() {
+        return this.weapon;
+    }
+
+    public int getRemainingShots() {
+        return this.remainingShots;
+    }
+
+
+    //METHODS FOR HANDLING ITEMS:
 
     public Item takeItem(String shortName) {
         Item item = currentRoom.findItem(shortName);

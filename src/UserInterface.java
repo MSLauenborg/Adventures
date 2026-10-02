@@ -116,7 +116,7 @@ public class UserInterface {
                     if (playerItem == null) {
                         IO.println("You do not possess " + itemName + " in your inventory.");
                     } else {
-                        IO.println("You have dropped " + playerItem.getLongName());
+                        IO.println("You have dropped the " + playerItem.getLongName());
                     }
                 }
 
@@ -132,10 +132,10 @@ public class UserInterface {
 
                 case "health" -> {
                     int playerHealth = adventure.getPlayerHealth();
-                    if(playerHealth >= 80) {
+                    if (playerHealth >= 80) {
                         IO.println("health: " + playerHealth + " - you are in perfect health");
-                    } else if ( playerHealth >= 50) {
-                        IO.println("health: " + playerHealth + " - you are ok, but need more energy!" );
+                    } else if (playerHealth >= 50) {
+                        IO.println("health: " + playerHealth + " - you are ok, but need more energy!");
                     } else {
                         IO.println("health: " + playerHealth + " - You really need some more food NOW!");
                     }
@@ -146,11 +146,43 @@ public class UserInterface {
                     EatResult result = adventure.eatItem(itemName);
                     switch (result) {
                         case NOT_FOUND -> IO.println("There is nothing like " + itemName + " to eat around here");
-                        case NOT_FOOD  -> IO.println("You cannot eat " + item.getLongName());
-                        case EATEN     -> IO.println("You ate " + item.getLongName());
+                        case NOT_FOOD -> IO.println("You cannot eat " + item.getLongName());
+                        case EATEN -> IO.println("You ate " + item.getLongName());
                     }
                 }
 
+                case "equip" -> {
+                    Item item = adventure.findItemAnywhere(itemName);
+                    EquipResult result = adventure.equipItem(itemName);
+                    switch (result) {
+                        case NOT_FOUND -> IO.println("You do not have " + itemName + " in your inventory");
+                        case NOT_WEAPON -> IO.println("Your " + item.getLongName() + " is not a weapon!");
+                        case EQUIPPED -> IO.println("You have equipped the " + item.getLongName());
+                    }
+                }
+
+                case "attack" -> {
+                    AttackResult remainingShots = adventure.attack();
+                    int numberFromAttack = adventure.getRemainingShots();
+                    switch (remainingShots) {
+
+                        case NO_WEAPON -> IO.println("You have no weapon equipped");
+
+                        case NO_AMMO -> {
+                            String weapon = adventure.getEquippedWeapon().getLongName();
+                            IO.println("Your " + weapon + " have no ammunition");
+                        }
+
+                        case ATTACKED -> {
+                            String weapon = adventure.getEquippedWeapon().getLongName();
+                            if (numberFromAttack == -1) {
+                                IO.println("You swing the " + weapon + " in the empty air");
+                            } else if (numberFromAttack > -1) {
+                                IO.println("You fire the " + weapon + " into the empty air. " + numberFromAttack + " shots left");
+                            }
+                        }
+                    }
+                }
 
                 default -> {
                     IO.println("Unknown move, try again");
