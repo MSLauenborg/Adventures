@@ -7,6 +7,7 @@ public class Player {
     private int health;
     private Weapon weapon;
     private int remainingShots;
+    private Enemy enemyHit;
 
     public Player(Room startRoom) {
         this.inventory = new ArrayList<>();
@@ -14,6 +15,8 @@ public class Player {
         this.health = 60;
         this.weapon = null;
     }
+
+    //GETTERS AND SETTERS FOR ROOM AND ITEMS:
 
     public int getHealth() {
         return health;
@@ -29,10 +32,6 @@ public class Player {
 
     public String getName() {
         return name;
-    }
-
-    public void moveTo(Room room) {
-        this.currentRoom = room;
     }
 
     public Room getCurrentRoom() {
@@ -63,31 +62,10 @@ public class Player {
         return EquipResult.EQUIPPED;
     }
 
-    public EatResult eatItem(String shortName) {
-        Item item = findItemAnywhere(shortName);
-        if (item == null) {
-            return EatResult.NOT_FOUND;
-        }
-        if (!(item instanceof Food)) {
-            return EatResult.NOT_FOOD;
-        }
-        Food food = (Food) item;
-        health += food.getHealthPoints();
-        inventory.remove(item);
-        currentRoom.removeItem(item);
-        return EatResult.EATEN;
-    }
+//METHODS FOR ATTACK, ENEMY AND WEAPONS:
 
-    public AttackResult attack() {
-
-        if (weapon == null) {
-            return AttackResult.NO_WEAPON;
-        }
-        if (!weapon.canUse()) {
-            return AttackResult.NO_AMMO;
-        }
-        remainingShots = weapon.use();
-        return AttackResult.ATTACKED;
+    public Enemy getEnemyHit() {
+        return enemyHit;
     }
 
     public Weapon getEquippedWeapon() {
@@ -98,8 +76,70 @@ public class Player {
         return this.remainingShots;
     }
 
+    public boolean hitPlayer(int damage) {
+        health -= damage;
+        if (health <= 0) {
+            return true;
+        }
+        return false;
+    }
 
-    //METHODS FOR HANDLING ITEMS:
+    //ATTACK SEQUENCE:
+
+    public AttackResult attack(String enemyShortName) {
+        Enemy enemy = getCurrentRoom().findEnemy(enemyShortName);
+
+        if (enemyShortName.isEmpty() && !getCurrentRoom().getEnemies().isEmpty()) {
+            enemy = getCurrentRoom().getEnemies().getFirst();
+        }
+
+        if (weapon == null) {
+            return AttackResult.NO_WEAPON;
+        }
+
+        if (!weapon.canUse()) {
+            return AttackResult.NO_AMMO;
+        }
+        if (enemy == null) {
+            if (enemyShortName.isEmpty()) {
+                remainingShots = weapon.use();
+                return AttackResult.ATTACKED_AIR;
+            }
+            return AttackResult.NO_ENEMY;
+        }
+
+        remainingShots = weapon.use();
+        enemyHit = enemy;
+
+        if (enemy.hit(weapon.getDamage())) {
+            return AttackResult.ENEMY_DIED;
+        }
+        if (hitPlayer(enemy.getWeapon().getDamage())) {
+            return AttackResult.PLAYER_DIED;
+        }
+        return AttackResult.ATTACKED;
+    }
+
+
+//METHODS FOR HANDLING ITEMS:
+
+    public EatResult eatItem(String shortName) {
+        Item item = findItemAnywhere(shortName);
+        if (item == null) {
+            return EatResult.NOT_FOUND;
+        }
+        if (!(item instanceof Food)) {
+            return EatResult.NOT_FOOD;
+        }
+        Food food = (Food) item;
+        health += food.getHealthPoints();
+        if(health <=0) {
+            return EatResult.DIED;
+        }
+        inventory.remove(item);
+        currentRoom.removeItem(item);
+        return EatResult.EATEN;
+    }
 
     public Item takeItem(String shortName) {
         Item item = currentRoom.findItem(shortName);
@@ -120,7 +160,6 @@ public class Player {
         return null;
     }
 
-
     public Item dropItem(String shortName) {
         Item item = findItem(shortName);
         if (findItem(shortName) == null) {
@@ -133,6 +172,10 @@ public class Player {
 
 
 //NAVIGATION METHODS:
+
+    public void moveTo(Room room) {
+        this.currentRoom = room;
+    }
 
     public boolean goNorth() {
         Room north = currentRoom.getNorth();
@@ -169,6 +212,4 @@ public class Player {
         currentRoom = west;
         return true;
     }
-
-
 }

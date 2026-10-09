@@ -1,3 +1,3 @@
 public enum EatResult {
-    NOT_FOUND, NOT_FOOD, EATEN
+    NOT_FOUND, NOT_FOOD, EATEN, DIED
 }

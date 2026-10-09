@@ -8,7 +8,7 @@ public class EscaperoomMap {
         //ROOMS FOR THE MAP
         Room room1 = new Room("Room 1", "You are in the darkest room!");
         Room room2 = new Room("Room 2", "You are in the red room, be careful!");
-        Room room3 = new Room("Room 3", "You are in the yellow room! lies await so guess careful");
+        Room room3 = new Room("Room 3", "You are in the yellow room! yellow is false so be careful");
         Room room4 = new Room("Room 4", "You are in the grey room! life is grey, so move on");
         Room room5 = new Room("Room 5", "You are close to finish but you must answer 1 question to pass: \n");
         Room room6 = new Room("Room 6", "You are in the purple room! You are tripping and far away");
@@ -21,8 +21,8 @@ public class EscaperoomMap {
         room7.addItem(new Item("brush", "a powerfull brush"));
         room7.addItem(new Item("paint", "magic paint"));
         room8.addItem(new Item("book", "a book about Snow White and the 7 dwarves"));
-        room2.addItem(new Item("bag" , "a bag for the empty people"));
-        room2.addItem(new Item("knife", "a sharp knife"));
+        room2.addItem(new Item("bag" , "a box with nothing in it"));
+        room2.addItem(new Item("toy", "a child toy"));
         room2.addItem(new Item("body", "a dead body on the ground"));
 
         //FOOD FOR ROOMS
@@ -40,16 +40,36 @@ public class EscaperoomMap {
         room2.addItem(joint);
 
         //SUBCLASS WEAPON ITEMS FOR ROOMS:
-        RangedWeapon rifle = new RangedWeapon("rifle", "USSR ak47 rifle ", 10);
-        RangedWeapon desertEagle = new RangedWeapon("pistol", "Israelic defence pistol", 7);
-        MeleeWeapon knife = new MeleeWeapon("knife", "Sharp and cool sixblade knife");
-        MeleeWeapon sword = new MeleeWeapon("sword", "long and majestic LOTR sword");
+        RangedWeapon rifle = new RangedWeapon("rifle", "USSR ak47 rifle", 10, 35);
+        RangedWeapon desertEagle = new RangedWeapon("pistol", "Israelic defence pistol", 7, 30);
+        RangedWeapon bow = new RangedWeapon("bow", "precise archery bow", 9, 15);
+        MeleeWeapon knife = new MeleeWeapon("dagger", "Sharp and cool sixblade dagger", 10);
+        MeleeWeapon sword = new MeleeWeapon("sword", "long and majestic LOTR sword", 5);
 
         //ADDING WEAPONS TO ROOMS:
         room1.addItem(rifle);
         room4.addItem(knife);
+        room9.addItem(knife);
         room2.addItem(sword);
+        room6.addItem(bow);
         room7.addItem(desertEagle);
+
+        //ENEMY WEAPON:
+        MeleeWeapon hands = new MeleeWeapon("hands", "strong fistfull hands", 10);
+        MeleeWeapon shit = new MeleeWeapon("shit", "nasty smelling shit", 20);
+        MeleeWeapon poison = new MeleeWeapon("poison", "toxic smelling aroma", 30);
+
+        //ENEMY:
+        Enemy troll = new Enemy("troll", "a cave troll", "Hits you with his hands", hands, 20, room4);
+        Enemy horse = new Enemy("horse", "a 3-headed horse with red eyes", "Runs you over and tries to eat you", shit, 40, room2);
+        Enemy wizard = new Enemy("wizard", "mysterious smiling wizard", "Opens a bottle where a poison smell arise", poison, 50, room8);
+        Enemy witch = new Enemy("eitch", "a creepy tiny witch", "laughs very loudly and points with her small elixir", poison, 50, room6);
+
+        //ADDING ENEMIES TO ROOMS:
+        room4.addEnemy(troll);
+        room8.addEnemy(wizard);
+        room2.addEnemy(horse);
+        room6.addEnemy(witch);
 
         //WINNING AND START ROOM:
         this.winningRoom = room5;

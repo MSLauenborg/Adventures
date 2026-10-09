@@ -16,6 +16,14 @@ public class UserInterface {
         if (!items.isEmpty()) {
             IO.println("Here you see: " + itemsToString(items));
         }
+        printEnemiesInRoom();
+    }
+
+    private void printEnemiesInRoom() {
+        ArrayList<Enemy> enemy = adventure.getCurrentRoom().getEnemies();
+        if (!enemy.isEmpty()) {
+            IO.println("Here lurks " + enemyToString(enemy));
+        }
     }
 
     private String itemsToString(ArrayList<Item> items) {
@@ -27,6 +35,17 @@ public class UserInterface {
             itemList += item;
         }
         return itemList;
+    }
+
+    private String enemyToString(ArrayList<Enemy> enemies) {
+        String enemyList = "";
+        for (Enemy enemy : enemies) {
+            if (!enemyList.isEmpty()) {
+                enemyList += ", ";
+            }
+            enemyList += enemy.getEnemyLongName();
+        }
+        return enemyList;
     }
 
     private void move(String direction) {
@@ -41,6 +60,7 @@ public class UserInterface {
 
         if (moved) {
             printCurrentRoom();
+
         } else {
             IO.println("You cannot go that way!");
         }
@@ -49,15 +69,16 @@ public class UserInterface {
     public void startGame() {
         boolean escapeRoomFinished = false;
 
-        IO.println("Welcome to the escape room! \nYou have to find room 5 to survive and get out! If you don't make it in time, the game will end and you will die!!! ");
-        IO.println("Rules: You can move in directions: North, South, East and West \njust type 'go north' to move north or 'go south' for south");
-        IO.println("If you need help you can also type 'help', and if you want your current position repeated type 'look' \nif you wish to exit the game just type 'exit'\n");
+        IO.println("Welcome to the escape room! \nYou have to find room 5 to survive and get out!");
+        IO.println("Rules: You can move in directions: North, South, East and West...Just type e.g. 'north' or 'go north' to move north");
+        IO.println("Extra commands are: \n'help' for help  \n'look' for current room position \n'health' for current health points \n'exit' for exiting the game (but why do that?) \n");
 
         String gameName = (IO.readln("What is your name player? "));
         adventure.setPlayerName(gameName);
         IO.println("hello " + adventure.getPlayerName() + " - Good luck finding your way out!");
 
         printCurrentRoom();
+
 
         while (!escapeRoomFinished) {
 
@@ -148,6 +169,10 @@ public class UserInterface {
                         case NOT_FOUND -> IO.println("There is nothing like " + itemName + " to eat around here");
                         case NOT_FOOD -> IO.println("You cannot eat " + item.getLongName());
                         case EATEN -> IO.println("You ate " + item.getLongName());
+                        case DIED -> {
+                            IO.println("You ate too much bad food and now are dead! GAME OVER");
+                            escapeRoomFinished = true;
+                        }
                     }
                 }
 
@@ -162,9 +187,10 @@ public class UserInterface {
                 }
 
                 case "attack" -> {
-                    AttackResult remainingShots = adventure.attack();
+                    AttackResult remainingShots = adventure.attack(itemName);
                     int numberFromAttack = adventure.getRemainingShots();
                     switch (remainingShots) {
+                        case NO_ENEMY -> IO.println("there is no enemy with that name");
 
                         case NO_WEAPON -> IO.println("You have no weapon equipped");
 
@@ -173,13 +199,36 @@ public class UserInterface {
                             IO.println("Your " + weapon + " have no ammunition");
                         }
 
-                        case ATTACKED -> {
+                        case ATTACKED_AIR -> {
                             String weapon = adventure.getEquippedWeapon().getLongName();
+                            //IO.println("You fire the " + weapon + " in the empty air");
                             if (numberFromAttack == -1) {
                                 IO.println("You swing the " + weapon + " in the empty air");
                             } else if (numberFromAttack > -1) {
                                 IO.println("You fire the " + weapon + " into the empty air. " + numberFromAttack + " shots left");
                             }
+                        }
+
+                        case ATTACKED -> {
+                            String weapon = adventure.getEquippedWeapon().getLongName();
+                            Enemy enemy = adventure.getEnemyHit();
+                            IO.println("you used the " + weapon + " and hit the " + enemy.getEnemyLongName());
+                            IO.println("The " + enemy.getEnemyLongName() + " used " + enemy.getWeapon() + " at you for " + enemy.getWeapon().getDamage());
+                        }
+
+                        case ENEMY_DIED -> {
+                            String weapon = adventure.getEquippedWeapon().getLongName();
+                            Enemy enemy = adventure.getEnemyHit();
+                            IO.println("you used the " + weapon + " and hit the " + enemy.getEnemyLongName() + "\nthe " + enemy.getEnemyShortName() + " dies, dropping it's " + enemy.getWeapon().getLongName());
+                        }
+
+                        case PLAYER_DIED -> {
+                            String weapon = adventure.getEquippedWeapon().getLongName();
+                            Enemy enemy = adventure.getEnemyHit();
+                            IO.println("you used the " + weapon + " and hit the " + enemy.getEnemyLongName());
+                            IO.println("The " + enemy.getEnemyLongName() + " used " + enemy.getWeapon() + " at you for " + enemy.getWeapon().getDamage());
+                            IO.println("You have lost all your healthPoints and are dead! - GAME OVER!");
+                            escapeRoomFinished = true;
                         }
                     }
                 }

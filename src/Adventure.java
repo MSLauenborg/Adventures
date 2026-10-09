@@ -98,8 +98,8 @@ public class Adventure {
         return player.equipItem(shortName);
     }
 
-    public AttackResult attack() {
-        return player.attack();
+    public AttackResult attack(String enemyShortName) {
+        return player.attack(enemyShortName);
     }
 
     public int getRemainingShots() {
@@ -109,5 +109,10 @@ public class Adventure {
     public Weapon getEquippedWeapon() {
         return player.getEquippedWeapon();
     }
+
+    public Enemy getEnemyHit() {
+        return player.getEnemyHit();
+    }
+
 }
 
